@@ -6,6 +6,6 @@ Start by cloning the Git repsitory:
 git clone https://github.com/lena-will/master-thesis.git
 ```
 
-## Summary
+## Introduction
 
-## Structure
+## Code Structure
