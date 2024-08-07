@@ -8,6 +8,9 @@ git clone https://github.com/lena-will/master-thesis.git
 
 ## Introduction
 
+## Data
+The text data are articles form the German newspaper "Frankfurter Allgemeine Sonntagszeitung" starting in 2001 and including articles up until April 2024. The data can be aquired from the "Frankfurter Allgemeine Zeitung".
+
 ## Code Structure
 + Text pre-processing is done in python and can be found in ```preprocessing.py```
 + For computational efficiency the LDA is run using the R package ```topicmodels``` which was built in C.
