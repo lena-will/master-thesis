@@ -12,18 +12,19 @@ beta <- tidy(lda, matrix = "beta")
 
 topics <- beta %>% 
   group_by(topic) %>% 
-  slice_max(beta, n = 40) %>% 
+  arrange(desc(beta), .by_group = TRUE) %>% 
+  slice_max(beta, n = 30) %>% 
   ungroup()
 
-write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_01.csv")
+#write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_01.csv")
 
 # word clouds:
 
 wordcloud_topic2 <- topics %>% 
-  filter(topic == 2)
+  filter(topic == 46)
 # for coloured word clouds
 pal <- brewer.pal(9,"Set1")
-wordcloud(wordcloud_topic2$term, freq = wordcloud_topic2$beta, random.order = TRUE, colors = pal)
+wordcloud(wordcloud_topic2$term, freq = wordcloud_topic2$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
 
 # network graphs:
 network_topics <- beta %>% 
