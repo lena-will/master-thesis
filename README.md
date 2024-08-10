@@ -9,7 +9,8 @@ git clone https://github.com/lena-will/master-thesis.git
 ## Introduction
 
 ## Data
-The text data are articles form the German newspaper "Frankfurter Allgemeine Sonntagszeitung" starting in 2001 and including articles up until April 2024. The data can be aquired from the "Frankfurter Allgemeine Zeitung".
++ The text data are articles form the German newspaper "Frankfurter Allgemeine Sonntagszeitung" starting in 2001 and including articles up until April 2024. The data can be aquired from the "Frankfurter Allgemeine Zeitung".
++ Previously dated German recessions in ```recessions_germany.csv``` are based on the "German Council of Economic Experts"'s business cycle dating (see [https://www.sachverstaendigenrat-wirtschaft.de/en/topics/business-cycles-and-growth/konjunkturzyklus-datierung.html](https://www.sachverstaendigenrat-wirtschaft.de/en/topics/business-cycles-and-growth/konjunkturzyklus-datierung.html)).
 
 ## Code Structure
 + Text pre-processing is done in python and can be found in ```preprocessing.py```
