@@ -20,13 +20,6 @@ for (f in 1:length(folder_list)) {
     rbind(data_tmp)
 }
 
-# work with subset of full dataset for developing:
-# artikel_subset <- artikel_df %>%
-#   slice(1:30)
-# artikel_holdout <- artikel_df %>% 
-#   slice(31:51)
-# complete_artikel <- artikel_subset %>% 
-#   rbind(artikel_holdout)
 complete_artikel <- artikel_df
 
 load(file = "/Users/lena/Documents/R/master_thesis/beta_library_lda.Rda")
@@ -46,6 +39,8 @@ match_id <- complete_artikel %>%
 artikel_info <- merge(gamma, match_id, by = "document") %>% 
   mutate(Datum = as.Date(Datum, format = "%Y-%m-%d"))
 
+# monthly aggregation
+
 time_series_topic <- artikel_info %>% 
   group_by(topic, month = lubridate::floor_date(Datum, 'month')) %>% 
   mutate(gamma_topic_month = sum(gamma)) %>% 
@@ -58,22 +53,29 @@ time_series_sum<- artikel_info %>%
   select(c(topic, month, gamma_sum)) %>% 
   distinct()
   
-time_series <- time_series_topic %>% 
+time_series_month <- time_series_topic %>% 
   left_join(time_series_sum) %>% 
   mutate(attention = gamma_topic_month/gamma_sum)
 
-monetary_economics <- time_series %>% 
-  filter(topic == 46)
+# issue aggregation
 
-plot_topic_attention <- monetary_economics %>% 
-  ggplot(aes(x = month, y = attention, group = 1)) +
-  geom_line() +
-  scale_x_date(name = "Date", date_breaks = "1 year", date_labels="%Y") +
-  labs(x = "Date", y = "Monetary Policy") +
-  theme_classic()
-plot(plot_topic_attention)
+time_series_topic_issue <- artikel_info %>% 
+  group_by(topic, Datum) %>% 
+  mutate(gamma_topic_issue = sum(gamma)) %>% 
+  select(c(topic, Datum, gamma_topic_issue)) %>% 
+  distinct()
 
+time_series_sum_issue<- artikel_info %>% 
+  group_by(Datum) %>% 
+  mutate(gamma_sum_issue = sum(gamma)) %>% 
+  select(c(topic, Datum, gamma_sum_issue)) %>% 
+  distinct()
+
+time_series_issue <- time_series_topic_issue %>% 
+  left_join(time_series_sum_issue) %>% 
+  mutate(attention_issue = gamma_topic_issue/gamma_sum_issue)
 
 # save for further analysis
-save(time_series, file = "/Users/lena/Documents/R/master_thesis/attention.Rda")
+save(time_series_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
+save(time_series_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
 
