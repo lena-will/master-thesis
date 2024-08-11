@@ -18,7 +18,7 @@ git clone https://github.com/lena-will/master-thesis.git
   + [CPI](https://www-genesis.destatis.de/genesis//online?operation=table&code=61111-0002&bypass=true&levelindex=0&levelid=1723382986798#abreadcrumb)
   + [Vacancies](https://statistik.arbeitsagentur.de/SiteGlobals/Forms/Suche/Einzelheftsuche_Formular.html?nn=1459928&topic_f=zr-stea-1950)
   + [Long-term Intrest Rate](https://fred.stlouisfed.org/graph/?id=IRLTLT01DEM156N,#0) (10 years)
-  + [Short-term Interest Rate](https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.DE.B.L23.D.R.A.2250.EUR.N) (3 months)
+  + [Short-term Interest Rate](https://fred.stlouisfed.org/series/IR3TIB01DEM156N) (3 months)
 
 ## Code Structure
 + Text pre-processing is done in python and can be found in ```preprocessing.py```
