@@ -1,6 +1,7 @@
 # housekeeping -----------------------------------------------------------------
 
 library(tidyverse)
+library(stringi)
 library(tidyr)
 library(quanteda)
 library(tm)
@@ -50,8 +51,14 @@ control_issue = list(
   best = TRUE
 )
 
-issue_lda <- LDA(dtm_issue, model = lda, control = control_issue)
+#issue_lda <- LDA(dtm_issue, model = lda, control = control_issue)
 #save(issue_lda, file = "/Users/lena/Documents/R/master_thesis/issue_lda_03.Rda")
+load(file = "/Users/lena/Documents/R/master_thesis/issue_lda_03.Rda")
+
+gamma_issue <- as.data.frame(issue_lda@gamma) %>% 
+  cbind(artikel_collapsed$Datum) %>% 
+  rename(Datum = `artikel_collapsed$Datum`) %>% 
+  relocate(Datum, .before = 1)
 
 # get article-topic mapping ----------------------------------------------------
 
@@ -79,15 +86,71 @@ for (t in 1:length(topics)) {
   article_topic_mapping <- article_topic_mapping %>% 
     rbind(mapping_tmp)
 }
+artikel_df_prep <- artikel_df %>% 
+  select(c(artikel_id, Stemming))
+article_topic_mapping_text <- merge(article_topic_mapping, artikel_df_prep, by = "artikel_id")
 
-# get positiv and negativ German words -----------------------------------------
+# get positive and negative German words -----------------------------------------
 
-positiv_de <- read.csv("/Users/lena/Documents/R/master_thesis/tone/positiv_de.csv") %>% 
-  mutate(positiv = tolower(positiv)) %>% 
-  distinct(positiv)
-negativ_de <- read.csv("/Users/lena/Documents/R/master_thesis/tone/negativ_de.csv") %>% 
-  mutate(negativ = tolower(negativ)) %>% 
-  distinct(negativ)
+positiv_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/GermanPolarityClues-Positive-Lemma-21042012.tsv", col_names = FALSE) 
+negativ_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/GermanPolarityClues-Negative-Lemma-21042012.tsv", col_names = FALSE) 
+colnames_tsv <- c("Term", "Lemma", "PoS", "Sentiment", "Score", "D")
+colnames(positiv_de) <- colnames_tsv
+colnames(negativ_de) <- colnames_tsv
+
+positiv_de <- positiv_de %>% 
+  select(Term) %>% 
+  mutate(Term = tolower(Term)) %>% 
+  distinct(Term)
+
+negativ_de <- negativ_de %>% 
+  select(Term) %>% 
+  mutate(Term = tolower(Term)) %>% 
+  distinct(Term)
+
+common_terms <- intersect(positiv_de$Term, negativ_de$Term)  
+
+positiv_de <- positiv_de %>% 
+  filter(! Term %in% common_terms)
+
+negativ_de <- negativ_de %>% 
+  filter(! Term %in% common_terms)
+
+# count number of positive and negative words in article mapping ---------------
+
+positiv_vector <- as.vector(positiv_de$Term)
+negativ_vector <- as.vector(negativ_de$Term)
+tmp_corpus <- quanteda::corpus(article_topic_mapping_text$Stemming)
+tmp_dtm <- DocumentTermMatrix(tmp_corpus)  
+
+counts_positiv <- tmp_dtm[, tmp_dtm$dimnames$Terms %in% positiv_vector]
+counts_negativ <- tmp_dtm[, tmp_dtm$dimnames$Terms %in% negativ_vector]
+
+sum_positiv <- as.data.frame(slam::row_sums(counts_positiv)) %>% 
+  rename(positiv_counts = 1)
+
+sum_negativ <- as.data.frame(slam::row_sums(counts_negativ)) %>% 
+  rename(negativ_counts = 1)
+
+# get number of terms per article ----------------------------------------------
+
+terms_per_article <- as.data.frame(slam::row_sums(tmp_dtm)) %>% 
+  rename(total_terms = 1)
+
+# Get normalised tone counts ---------------------------------------------------
+
+tone_counts <- article_topic_mapping_text %>% 
+  cbind(sum_positiv) %>% 
+  cbind(sum_negativ) %>% 
+  cbind(terms_per_article)
+
+tone_counts_normalised <- tone_counts %>% 
+  mutate(positiv_counts = positiv_counts/total_terms) %>% 
+  mutate(negativ_counts = negativ_counts/total_terms)
+
+# tone adjustment of topic frequencies per issue -------------------------------
+
+tone_adjustment <- tone_counts_normalised %>% 
+  mutate(tone_adjustment = positiv_counts - negativ_counts)
 
 
-  
