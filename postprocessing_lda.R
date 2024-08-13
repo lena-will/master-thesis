@@ -79,3 +79,19 @@ time_series_issue <- time_series_topic_issue %>%
 save(time_series_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
 save(time_series_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
 
+# standardise time-series ------------------------------------------------------
+
+z_scores <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+
+attention_month <- time_series_month %>% 
+  group_by(topic) %>% 
+  mutate(attention_z = z_scores(attention)) %>% 
+  ungroup()
+
+attention_isssue <- time_series_issue %>% 
+  group_by(topic) %>% 
+  mutate(attention_z = z_scores(attention_issue)) %>% 
+  ungroup()
+
