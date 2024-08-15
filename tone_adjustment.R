@@ -86,6 +86,16 @@ for (t in 1:length(topics)) {
   article_topic_mapping <- article_topic_mapping %>% 
     rbind(mapping_tmp)
 }
+
+check <- article_topic_mapping %>% 
+  group_by(Datum) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  filter(n != 80)
+
+filter_date <- article_topic_mapping %>% 
+  filter(Datum == "2002-03-17")
+
 artikel_df_prep <- artikel_df %>% 
   select(c(artikel_id, Stemming))
 article_topic_mapping_text <- merge(article_topic_mapping, artikel_df_prep, by = "artikel_id")
