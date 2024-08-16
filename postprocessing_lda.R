@@ -82,9 +82,21 @@ time_series_issue <- time_series_topic_issue %>%
   left_join(time_series_sum_issue) %>% 
   mutate(attention_issue = gamma_topic_issue/gamma_sum_issue)
 
+# format
+
+attention_issue <- time_series_issue %>% 
+  select(c(topic, Datum, attention_issue)) %>% 
+  pivot_wider(names_from = topic, values_from = attention_issue) %>% 
+  rename(Date = Datum)
+
+attention_month <- time_series_month %>% 
+  select(c(topic, month, attention)) %>% 
+  pivot_wider(names_from = topic, values_from = attention) %>% 
+  rename(Date = month)
+
 # save for further analysis ----------------------------------------------------
-save(time_series_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
-save(time_series_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
+save(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
+save(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
 
 # use as input to python script to map publication date to quarter week
 
