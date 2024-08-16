@@ -3,22 +3,9 @@
 library(tidyverse)
 library(lubridate)
 
-# load text-based indicators ---------------------------------------------------
-
-load("/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
-
 z_scores <- function(x) {
   (x - mean(x)) / sd(x)
 }
-
-attention_isssue <- time_series_issue %>% 
-  group_by(topic) %>% 
-  mutate(attention_z = z_scores(attention_issue)) %>% 
-  ungroup() %>% 
-  select(topic, Datum, attention_z)
-
-attention_wide <- attention_isssue %>% 
-  pivot_wider(names_from = topic, values_from = attention_z)
 
 # load macro data --------------------------------------------------------------
 
