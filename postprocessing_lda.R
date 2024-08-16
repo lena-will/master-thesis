@@ -98,6 +98,9 @@ attention_month <- time_series_month %>%
 save(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
 save(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
 
+write.csv(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.csv")
+write.csv(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.csv")
+
 # use as input to python script to map publication date to quarter week
 
 
