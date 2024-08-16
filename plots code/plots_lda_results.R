@@ -39,14 +39,6 @@ topic2_network <- paste0(topic2_string, collapse = "-")
 network_test <- graph_from_literal(soldat-bundeswehr-afghanistan-deutsch-werden-einsatz-sein-jahr-müssen-mehr-militärisch-schon-truppe-neu-geben-erst-amerikanisch)
 plot(network_test)
 
-# exploring the documents' topics ----------------------------------------------
-
-gamma <- tidy(lda, matrix = "gamma")
-
-check <- gamma %>% 
-  group_by(document) %>% 
-  summarise(sum(gamma))
-
 
 
 
