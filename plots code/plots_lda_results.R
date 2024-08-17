@@ -8,15 +8,16 @@ library(RColorBrewer)
 
 # exploring the most common words in the topics --------------------------------
 
-beta <- tidy(lda, matrix = "beta")
+load("/Users/lena/Documents/R/master_thesis/lda_035.Rda")
+beta <- tidy(lda_final, matrix = "beta")
 
 topics <- beta %>% 
   group_by(topic) %>% 
   arrange(desc(beta), .by_group = TRUE) %>% 
-  slice_max(beta, n = 30) %>% 
+  slice_max(beta, n = 50) %>% 
   ungroup()
 
-#write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_01.csv")
+write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_035.csv")
 
 # word clouds:
 
