@@ -33,7 +33,6 @@ elasticNet_w1 <- function(gdp,
   for (ii in 1:nrow(alpha_ini)) {
     for (month in 1:nrow(window)) {
       window_test <- window[month]
-      print(window_test)
       y_m1_train <- y_m1 %>%
         filter(Date >= min_train & Date < window_test) %>%
         select(gdp_growth)
