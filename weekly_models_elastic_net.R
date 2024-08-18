@@ -223,18 +223,6 @@ week3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
 
 source("/Users/lena/Git/master-thesis/functions/elasticNet_w4.R")
 
-week4 <- elasticNet_w4(gdp, attention_bridge, esi, vacancies, cpi, min_train, min_test, max_test)
-
-# Model 5
-
-
-
-
-
-
-
-
-
-
+week4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 

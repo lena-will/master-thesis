@@ -38,8 +38,9 @@ elasticNet_w4 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_brid
   # nowcasting
   
   for (ii in 1:nrow(alpha_ini)) {
-    for (month in 1:nrow(window)) {
+    for (month in 1:(nrow(window)-1)) {
       window_test <- window[month]
+      window_test_max <- window[month+1]
       y_m1_train <- y_m1 %>%
         filter(Date >= min_train & Date < window_test) %>%
         select(gdp_growth)
@@ -64,12 +65,12 @@ elasticNet_w4 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_brid
         )
       
       X_m1_test <- X_m1 %>%
-        filter(month == window_test) %>%
+        filter(month >= window_test & month < window_test_max) %>%
         select(-c(month, Date, week_avail, quarter_avail))
       X_m1_test_z <- scale(X_m1_test, center = mean_x, scale = sd_x)
       
       y_m1_test <- y_m1 %>%
-        filter(Date == window_test) %>%
+        filter(Date >= window_test & Date < window_test_max) %>%
         select(gdp_growth)
       y_m1_test <- as.matrix(y_m1_test)
       

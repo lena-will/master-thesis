@@ -1,6 +1,6 @@
-elasticNet_w5 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test){
+elasticNet_w6 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test){
   y_m1 <- gdp %>%
-    filter(week == 5)
+    filter(week == 6)
   esi_prep <- esi_bridge %>% 
     filter(week == 4) %>% 
     select(ESI_b)
@@ -11,7 +11,7 @@ elasticNet_w5 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_brid
     filter(week == 4) %>% 
     select(CPI_b)
   X_m1 <- attention_bridge %>%
-    filter(week_avail == 5) %>% 
+    filter(week_avail == 6) %>% 
     cbind(esi_prep) %>% 
     cbind(vacancies_prep) %>% 
     cbind(cpi_prep)
