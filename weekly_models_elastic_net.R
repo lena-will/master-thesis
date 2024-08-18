@@ -113,6 +113,8 @@ min_train <- "2001-10-01"
 max_train <- "2007-06-30"
 max_test <- "2009-06-30"
 
+# Model 1
+
 y_m1 <- gdp %>% 
   filter(week == 1)
 X_m1 <- attention %>% 
@@ -134,15 +136,16 @@ alpha_ini <- as.matrix(seq(
   to = 0.9,
   length.out = 9
 ))
-month = 1
-#for (ii in 1:nrow(alpha_ini)) {
-  #for(month in 1:(nrow(window)-2)){
+
+for (ii in 1:nrow(alpha_ini)) {
+  for(month in 1:(nrow(window)-2)){
+    window_train <- window[month]
     y_m1_train <- y_m1 %>% 
-      filter(Date >= min_train & Date < window[month]) %>% 
+      filter(Date >= min_train & Date < window_train) %>% 
       select(gdp_growth)
     y_m1_train <- as.matrix(y_m1_train)
     X_m1_train <- X_m1 %>% 
-      filter(month >= min_train & month < window[month]) %>% # this does not have any observations!!
+      filter(month >= min_train & month < window_train) %>% 
       select(-c(month, Date, week_avail, quarter_avail))
     
     mean_x <- apply(X_m1_train, 2, mean)
@@ -154,20 +157,21 @@ month = 1
       cv.glmnet(
         X_m1_train_z,
         y_m1_train,
-        alpha = 0.5,
-        #alpha = alpha_ini[ii],
+        alpha = alpha_ini[ii],
         type.measure = "mse",
         nfolds = 10,
         family = "gaussian"
       )
     
+    window_test <- window[month + 2]
+    
     X_m1_test <- X_m1 %>% 
-      filter(Date == window[month + 2]) %>% 
-      select(-c(Date, week_avail, quarter_avail))
+      filter(month == window_test) %>% 
+      select(-c(month, Date, week_avail, quarter_avail))
     X_m1_test_z <- scale(X_m1_test, center = mean_x, scale = sd_x)
     
     y_m1_test <- y_m1 %>% 
-      filter(Date == window[month + 2]) %>% 
+      filter(Date == window_test) %>% 
       select(gdp_growth)
     y_m1_test <- as.matrix(y_m1_test)
     
@@ -178,12 +182,12 @@ month = 1
     
     oos_error[month] <- (predict_en - y_m1_test)
     
-  #}
+  }
   oos_error_prep <- t(oos_error)
   oos_error_all <- oos_error_all %>% 
     rbind(oos_error_prep)
   rmsfe[ii] <- sqrt(mean(oos_error ^ 2))
-#}
+}
 min_rmsfe <- min(rmsfe)
 min_index <- which(rmsfe == min(rmsfe))
 oos_error_min <- oos_error_all[min_index[1], ]
