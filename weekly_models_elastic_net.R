@@ -14,17 +14,26 @@ colnames(attention) <- col_names
 attention$month <- as.Date(sub("\\d{2}$", "1", attention$Date))
 
 attention <- attention %>% 
-  relocate(month, .before = quarter_avail)
+  relocate(month, .before = quarter_avail) %>% 
+  slice(-1)
 
 # attention <- attention %>%
 #   relocate(quarter_avail, .after = Date) %>%
 #   relocate(week_avail, .after = quarter_avail)
 
-# load macro data --------------------------------------------------------------
+source("/Users/lena/Git/master-thesis/functions/bridge_data_average.R")
+
+start_col <- 5
+attention_bridge <- bridge_data_average(attention, start_col)
+
+attention_bridge <- attention_bridge %>%
+  select(c(Date, month, quarter_avail, week_avail, ends_with("_b")))
+
+# load macro attention_bridge --------------------------------------------------------------
 
 # esi
 
-esi <- read.csv("/Users/lena/Documents/R/master_thesis/data/esi.csv") %>%
+esi <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/esi.csv") %>%
   select(-X) %>%
   mutate(week = case_when(
     month(Date) == 1 |
@@ -40,7 +49,7 @@ esi <- read.csv("/Users/lena/Documents/R/master_thesis/data/esi.csv") %>%
 
 # cpi
 
-cpi <- read.csv("/Users/lena/Documents/R/master_thesis/data/cpi.csv") %>%
+cpi <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/cpi.csv") %>%
   select(-X) %>%
   mutate(week = case_when(
     month(Date) == 1 |
@@ -56,7 +65,7 @@ cpi <- read.csv("/Users/lena/Documents/R/master_thesis/data/cpi.csv") %>%
 
 # vacancies 
 
-vacancies <- read.csv("/Users/lena/Documents/R/master_thesis/data/vacancies.csv") %>%
+vacancies <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/vacancies.csv") %>%
   select(-X) %>%
   mutate(week = case_when(
     month(Date) == 1 |
@@ -72,7 +81,7 @@ vacancies <- read.csv("/Users/lena/Documents/R/master_thesis/data/vacancies.csv"
 
 # term spread
 
-term_spread <- read.csv("/Users/lena/Documents/R/master_thesis/data/term_spread.csv") %>%
+term_spread <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/term_spread.csv") %>%
   select(-X) %>%
   mutate(week = case_when(
     month(Date) == 1 |
@@ -88,7 +97,7 @@ term_spread <- read.csv("/Users/lena/Documents/R/master_thesis/data/term_spread.
 
 # ip index 
 
-ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") %>%
+ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/ip_index.csv") %>%
   select(-X) %>%
   mutate(week = case_when(
     month(Date) == 1 |
@@ -104,7 +113,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
 
 # gdp 
 
-gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>% 
+gdp <- read.csv("/Users/lena/Documents/R/master_thesis/attention_bridge/gdp_weekly.csv") %>% 
   rename(week = quarter_week)
 
 #Period 1: Recession - trainings sample: 2005Q1-2007Q2
@@ -120,6 +129,86 @@ source("/Users/lena/Git/master-thesis/functions/elasticNet_w1.R")
 week1 <- elasticNet_w1(gdp, attention, min_train, min_test, max_test)
 
 # Model 2
+
+y_m1 <- gdp %>%
+  filter(week == 1)
+X_m1 <- attention %>%
+  filter(week_avail == 1)
+
+# define nowcasting window
+window <- y_m1 %>%
+  select(Date) %>%
+  filter(Date >= min_test & Date <= max_test)
+window <- as.matrix(window)
+
+# initiate result vectors
+
+predictions <- c()
+oos_error <- c()
+oos_error_all <- NULL
+rmsfe <- NULL
+
+alpha_ini <- as.matrix(seq(
+  from = 0.1,
+  to = 0.9,
+  length.out = 9
+))
+
+# nowcasting
+
+for (ii in 1:nrow(alpha_ini)) {
+  for (month in 1:nrow(window)) {
+    window_test <- window[month]
+    y_m1_train <- y_m1 %>%
+      filter(Date >= min_train & Date < window_test) %>%
+      select(gdp_growth)
+    y_m1_train <- as.matrix(y_m1_train)
+    X_m1_train <- X_m1 %>%
+      filter(month >= min_train & month < window_test) %>%
+      select(-c(month, Date, week_avail, quarter_avail))
+    
+    mean_x <- apply(X_m1_train, 2, mean)
+    sd_x <- apply(X_m1_train, 2, sd)
+    
+    X_m1_train_z <- scale(X_m1_train, center = mean_x, scale = sd_x)
+    
+    fit_en <-
+      cv.glmnet(
+        X_m1_train_z,
+        y_m1_train,
+        alpha = alpha_ini[ii],
+        type.measure = "mse",
+        nfolds = 10,
+        family = "gaussian"
+      )
+    
+    X_m1_test <- X_m1 %>%
+      filter(month == window_test) %>%
+      select(-c(month, Date, week_avail, quarter_avail))
+    X_m1_test_z <- scale(X_m1_test, center = mean_x, scale = sd_x)
+    
+    y_m1_test <- y_m1 %>%
+      filter(Date == window_test) %>%
+      select(gdp_growth)
+    y_m1_test <- as.matrix(y_m1_test)
+    
+    predict_en <-
+      predict(fit_en, s = fit_en$lambda.1se, newx = X_m1_test_z)
+    
+    predictions[month] <- predict_en
+    
+    oos_error[month] <- (predict_en - y_m1_test)
+    
+  }
+  oos_error_prep <- t(oos_error)
+  oos_error_all <- oos_error_all %>%
+    rbind(oos_error_prep)
+  rmsfe[ii] <- sqrt(mean(oos_error ^ 2))
+}
+min_rmsfe <- min(rmsfe)
+min_index <- which(rmsfe == min(rmsfe))
+oos_error_min <- oos_error_all[min_index[1], ]
+results <- list(min_rmsfe, oos_error_all, oos_error_min, min_index)
 
 
 
