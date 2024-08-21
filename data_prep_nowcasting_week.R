@@ -10,14 +10,19 @@ z_scores <- function(x) {
 # load text-based indicators ---------------------------------------------------
 
 attention <- read.csv("/Users/lena/Documents/R/master_thesis/attention_issue_mapping.csv") %>%
-  select(-X)
+  select(-X) %>% 
+  slice(-1)
 
-col_names <- c("Date", rep(1:60, 1), "quarter_avail", "week_avail")
+col_names <- c("Date", "quarter_avail", "week_avail", rep(1:60, 1))
 colnames(attention) <- col_names
 
-attention <- attention %>%
-  relocate(quarter_avail, .after = Date) %>%
-  relocate(week_avail, .after = quarter_avail)
+# attention <- attention %>%
+#   relocate(quarter_avail, .after = Date) %>%
+#   relocate(week_avail, .after = quarter_avail)
+
+attention_tmp <- attention %>% 
+  mutate(year = year(Date), .after = Date) %>% 
+  mutate(diff = ((`1` - lag(`1`, n = 52))/lag(`1`, n = 52))*100, .after = week_avail)
 
 # esi --------------------------------------------------------------------------
 

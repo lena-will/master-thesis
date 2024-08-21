@@ -31,7 +31,7 @@ attention_bridge <- bridge_data_average(attention, start_col)
 attention_bridge <- attention_bridge %>%
   select(c(Date, month, quarter_avail, week_avail, ends_with("_b")))
 
-# load macro attention_bridge --------------------------------------------------------------
+# load macro data  -------------------------------------------------------------
 
 # esi
 
@@ -195,6 +195,23 @@ gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>%
   rename(week = quarter_week) %>% 
   filter(Date >= "2001-10-01" & Date < "2024-04-01")
 
+# load weekly models
+
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w1.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w2.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w3.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w4.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w5.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w6.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w7.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w8.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w9.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w10.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w11.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w12.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w13.R")
+
+
 #Period 1: Recession - training sample: 2001Q4-2007Q2 --------------------------
 
 min_train <- "2001-10-01"
@@ -203,81 +220,55 @@ max_test <- "2009-07-01"
 
 # Model 1
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w1.R")
-
-week1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
+week1_p1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 2
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w2.R")
-
-week2 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
+week2_p1 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 3
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w3.R")
-
-week3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
+week3_p1 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 4
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w4.R")
-
-week4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week4_p1 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 5
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w5.R")
-
-week5 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week5_p1 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 6
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w6.R")
-
-week6 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week6_p1 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 7
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w7.R")
-
-week7 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week7_p1 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 8
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w8.R")
-
-week8 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week8_p1 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 9
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w9.R")
-
-week9 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week9_p1 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 10
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w10.R")
-
-week10 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week10_p1 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 11
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w11.R")
-
-week11 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week11_p1 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 12
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w12.R")
-
-week12 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week12_p1 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 13
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w13.R")
-
-week13 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week13_p1 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 #Period 2: Cyclical Stability - training sample: 2001Q4-2014Q2 -----------------
 
@@ -287,81 +278,55 @@ max_test <- "2016-07-01"
 
 # Model 1
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w1.R")
-
-week1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
+week1_p2 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 2
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w2.R")
-
-week2 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
+week2_p2 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 3
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w3.R")
-
-week3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
+week3_p2 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 4
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w4.R")
-
-week4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week4_p2 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 5
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w5.R")
-
-week5 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week5_p2 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 6
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w6.R")
-
-week6 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week6_p2 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 7
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w7.R")
-
-week7 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week7_p2 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 8
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w8.R")
-
-week8 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week8_p2 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 9
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w9.R")
-
-week9 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week9_p2 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 10
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w10.R")
-
-week10 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week10_p2 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 11
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w11.R")
-
-week11 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week11_p2 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 12
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w12.R")
-
-week12 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week12_p2 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 13
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w13.R")
-
-week13 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week13_p2 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 #Period 3: Covid - training sample: 2001Q4-2019Q2 ------------------------------
 
@@ -371,81 +336,55 @@ max_test <- "2021-07-01"
 
 # Model 1
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w1.R")
-
-week1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
+week1_p3 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 2
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w2.R")
-
-week2 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
+week2_p3 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 3
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w3.R")
-
-week3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
+week3_p3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 4
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w4.R")
-
-week4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week4_p3 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 5
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w5.R")
-
-week5 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week5_p3 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 6
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w6.R")
-
-week6 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week6_p3 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 7
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w7.R")
-
-week7 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week7_p3 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 8
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w8.R")
-
-week8 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week8_p3 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 9
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w9.R")
-
-week9 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week9_p3 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 10
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w10.R")
-
-week10 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week10_p3 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 11
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w11.R")
-
-week11 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week11_p3 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 12
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w12.R")
-
-week12 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week12_p3 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 13
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w13.R")
-
-week13 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week13_p3 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 #Period 4: Now - training sample: 2001Q4-2014Q2 --------------------------------
 
@@ -455,83 +394,56 @@ max_test <- "2024-04-01"
 
 # Model 1
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w1.R")
-
-week1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
+week1_p4 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 2
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w2.R")
-
-week2 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
+week2_p4 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 3
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w3.R")
-
-week3 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
+week3_p4 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
 
 # Model 4
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w4.R")
-
-week4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week4_p4 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 5
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w5.R")
-
-week5 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week5_p4 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 6
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w6.R")
-
-week6 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+week6_p4 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
 
 # Model 7
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w7.R")
-
-week7 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week7_p4 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 8
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w8.R")
-
-week8 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week8_p4 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 9
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w9.R")
-
-week9 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week9_p4 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 10
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w10.R")
-
-week10 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+week10_p4 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
 
 # Model 11
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w11.R")
-
-week11 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week11_p4 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 12
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w12.R")
-
-week12 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week12_p4 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 # Model 13
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_w13.R")
-
-week13 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+week13_p4 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
 
 
 
-# Testing ----------------------------------------------------------------------
 
