@@ -50,7 +50,7 @@ for (ii in 1:ncol(time_series)){
 
 # monthly attention ------------------------------------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/attention_month.Rda")
+load("/Users/lena/Documents/R/master_thesis/final/attention_month_final.Rda")
 attention_series <- attention_month %>% 
   select(-Date)
 
@@ -98,7 +98,7 @@ for (ii in 1:ncol(attention_mom)){
 
 # weekly attention -------------------------------------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
+load("/Users/lena/Documents/R/master_thesis/final/attention_issue_final.Rda")
 attention_weekly <- attention_issue %>% 
   select(-Date)
 
@@ -114,6 +114,8 @@ for (ii in 1:ncol(attention_weekly)){
 }
 
 # compute growth rates
+
+
 
 
 

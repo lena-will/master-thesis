@@ -22,14 +22,10 @@ for (f in 1:length(folder_list)) {
 
 complete_artikel <- artikel_df
 
-#load(file = "/Users/lena/Documents/R/master_thesis/beta_library_lda.Rda")
-#load(file = "/Users/lena/Documents/R/master_thesis/gamma_library_lda.Rda")
-load(file = "/Users/lena/Documents/R/master_thesis/LDA environments/lda_05.Rda")
+load(file = "/Users/lena/Documents/R/master_thesis/lda_60.Rda")
 
-lda <- lda_final
-
-beta <- tidy(lda, matrix = "beta")
-gamma <- tidy(lda, matrix = "gamma")
+beta <- tidy(lda_final, matrix = "beta")
+gamma <- tidy(lda_final, matrix = "gamma")
 
 # document distributions over topics -------------------------------------------
 
@@ -95,11 +91,11 @@ attention_month <- time_series_month %>%
   rename(Date = month)
 
 # save for further analysis ----------------------------------------------------
-save(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.Rda")
-save(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.Rda")
+save(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue_final.Rda")
+save(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month_final.Rda")
 
-write.csv(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue.csv")
-write.csv(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month.csv")
+write.csv(attention_issue, file = "/Users/lena/Documents/R/master_thesis/attention_issue_final.csv")
+write.csv(attention_month, file = "/Users/lena/Documents/R/master_thesis/attention_month_final.csv")
 
 # use as input to python script to map publication date to quarter week
 

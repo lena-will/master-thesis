@@ -8,7 +8,7 @@ library(RColorBrewer)
 
 # exploring the most common words in the topics --------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/lda_035.Rda")
+load("/Users/lena/Documents/R/master_thesis/lda_60.Rda")
 beta <- tidy(lda_final, matrix = "beta")
 
 topics <- beta %>% 
@@ -17,15 +17,44 @@ topics <- beta %>%
   slice_max(beta, n = 50) %>% 
   ungroup()
 
-write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_035.csv")
+#write.csv(topics, "/Users/lena/Documents/R/master_thesis/topics_60.csv")
 
 # word clouds:
 
-wordcloud_topic2 <- topics %>% 
-  filter(topic == 46)
+# Health Care
+wordcloud_topic_health <- topics %>% 
+  filter(topic == 38)
 # for coloured word clouds
 pal <- brewer.pal(9,"Set1")
-wordcloud(wordcloud_topic2$term, freq = wordcloud_topic2$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+wordcloud(wordcloud_topic_health$term, freq = wordcloud_topic_health$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+
+# Finanzkrise
+wordcloud_topic_finanzkrise <- topics %>% 
+  filter(topic == 15)
+# for coloured word clouds
+pal <- brewer.pal(9,"Set1")
+wordcloud(wordcloud_topic_finanzkrise$term, freq = wordcloud_topic_finanzkrise$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+
+# Energiewende
+wordcloud_topic_energie <- topics %>% 
+  filter(topic == 17)
+# for coloured word clouds
+pal <- brewer.pal(9,"Set1")
+wordcloud(wordcloud_topic_energie$term, freq = wordcloud_topic_energie$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+
+# Öffentlicher Haushalt
+wordcloud_topic_haushalt <- topics %>% 
+  filter(topic == 34)
+# for coloured word clouds
+pal <- brewer.pal(9,"Set1")
+wordcloud(wordcloud_topic_haushalt$term, freq = wordcloud_topic_haushalt$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+
+# Negative Sentiment
+wordcloud_negative_sentiment <- topics %>% 
+  filter(topic == 12)
+# for coloured word clouds
+pal <- brewer.pal(9,"Set1")
+wordcloud(wordcloud_negative_sentiment$term, freq = wordcloud_negative_sentiment$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
 
 # network graphs:
 network_topics <- beta %>% 
