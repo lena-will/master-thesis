@@ -5,9 +5,9 @@ elasticNet_w1 <- function(gdp,
                           max_test) {
   # filter for relevant weeks
   y_m1 <- gdp %>%
-    filter(week == 1)
+    filter(week == 2)
   X_m1 <- attention %>%
-    filter(week_avail == 1)
+    filter(week_avail == 2)
   
   # define nowcasting window
   window <- y_m1 %>%
@@ -30,8 +30,8 @@ elasticNet_w1 <- function(gdp,
   
   # nowcasting
   
-  for (ii in 1:nrow(alpha_ini)) {
-    for (month in 1:(nrow(window)-1)) {
+for (ii in 1:nrow(alpha_ini)) {
+  for (month in 1:(nrow(window)-1)) {
       window_test <- window[month]
       window_test_max <- window[month+1]
       y_m1_train <- y_m1 %>%
@@ -47,11 +47,13 @@ elasticNet_w1 <- function(gdp,
       
       X_m1_train_z <- scale(X_m1_train, center = mean_x, scale = sd_x)
       
+      test <- matrix(rnorm(25) , nrow = 22)
+      
       fit_en <-
         cv.glmnet(
           X_m1_train_z,
           y_m1_train,
-          alpha = alpha_ini[ii],
+          alpha = alpha_ini[ii]
           type.measure = "mse",
           nfolds = 10,
           family = "gaussian"

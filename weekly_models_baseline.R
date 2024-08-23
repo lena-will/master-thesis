@@ -20,7 +20,7 @@ esi <- read.csv("/Users/lena/Documents/R/master_thesis/data/esi.csv") %>%
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(week, .after = Date)
 
 esi_bridge <- esi %>%
@@ -55,7 +55,7 @@ cpi <- read.csv("/Users/lena/Documents/R/master_thesis/data/cpi.csv") %>%
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(week, .after = Date) %>% 
   select(-CPI)
 
@@ -91,7 +91,7 @@ vacancies <- read.csv("/Users/lena/Documents/R/master_thesis/data/vacancies.csv"
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(week, .after = Date) %>% 
   select(-vacancies)
 
@@ -126,7 +126,7 @@ term_spread <- read.csv("/Users/lena/Documents/R/master_thesis/data/term_spread.
       month(Date) == 11 ~ 11,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 0)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(spread, .after = last_col())
 
 term_spread_bridge <- term_spread %>%
@@ -160,7 +160,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
       month(Date) == 11 ~ 0,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 0)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(IP, .after = last_col())
 
 
@@ -168,7 +168,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
 
 gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>% 
   rename(week = quarter_week) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01")
+  filter(Date >= "2002-01-01" & Date < "2024-04-01")
 
 # load weekly models
 
@@ -180,7 +180,7 @@ source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w13.R")
 
 # Period 1: Recession - training sample: 2001Q4-2007Q2 -------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2007-07-01"
 max_test <- "2009-07-01"
 
@@ -213,7 +213,7 @@ results_p1 <- c(rmsfe_w4_p1, rmsfe_w7_p1, rmsfe_w9_p1, rmsfe_w11_p1, rmsfe_w13_p
 
 # Period 2: Cyclical Stability - training sample: 2001Q4-2014Q2 ----------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2014-07-01"
 max_test <- "2016-07-01"
 
@@ -246,7 +246,7 @@ results_p2 <- c(rmsfe_w4_p2, rmsfe_w7_p2, rmsfe_w9_p2, rmsfe_w11_p2, rmsfe_w13_p
 
 # Period 3: Covid - training sample: 2001Q4-2019Q2 -----------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2019-07-01"
 max_test <- "2021-07-01"
 
@@ -279,7 +279,7 @@ results_p3 <- c(rmsfe_w4_p3, rmsfe_w7_p3, rmsfe_w9_p3, rmsfe_w11_p3, rmsfe_w13_p
 
 # Period 4: Now - training sample: 2001Q4-2014Q2 -------------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2022-07-01"
 max_test <- "2024-04-01"
 

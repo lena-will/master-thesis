@@ -5,31 +5,32 @@ library(glmnet)
 
 # load text-based indicators ---------------------------------------------------
 
-attention <- read.csv("/Users/lena/Documents/R/master_thesis/attention_issue_mapping.csv") %>%
-  select(-X) %>% 
-  mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
+attention_ini <- read.csv("/Users/lena/Documents/R/master_thesis/final/attention_issue_mapping_final.csv") %>%
+ mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
 
-col_names <- c("Date", "quarter_avail", "week_avail", rep(1:60, 1))
-colnames(attention) <- col_names
+attention_ini$month <- as.Date(sub("\\d{2}$", "1", attention_ini$Date))
 
-attention$month <- as.Date(sub("\\d{2}$", "1", attention$Date))
+attention <- attention_ini %>% 
+    relocate(month, .after = Date) %>% 
+    filter(Date >= "2002-01-01" & Date < "2024-04-01") #%>% 
+    #select(c(Date, month, quarter_avail, week_avail, ends_with("_growth")))
 
-attention <- attention %>% 
-  relocate(month, .before = quarter_avail) %>% 
-  slice(-1) %>% 
-  filter(Date < "2024-04-01")
-
-# attention <- attention %>%
-#   relocate(quarter_avail, .after = Date) %>%
-#   relocate(week_avail, .after = quarter_avail)
-
-source("/Users/lena/Git/master-thesis/functions/bridge_data_average.R")
+source("/Users/lena/Git/master-thesis/functions/elasticNet_models/bridge_data_average.R")
 
 start_col <- 5
 attention_bridge <- bridge_data_average(attention, start_col)
 
 attention_bridge <- attention_bridge %>%
   select(c(Date, month, quarter_avail, week_avail, ends_with("_b")))
+
+# adjust the one quarter which does not have week 13 ()
+
+index_week12 <- which(attention_bridge$Date == "2018-03-26")
+attention_bridge[index_week12, 5:ncol(attention_bridge)] = attention_bridge[index_week12-1, 5:ncol(attention_bridge)]
+
+check <- attention_bridge %>% 
+  filter(Date == "2018-03-26" | Date == "2018-03-25")
+
 
 # load macro data  -------------------------------------------------------------
 
@@ -48,7 +49,7 @@ esi <- read.csv("/Users/lena/Documents/R/master_thesis/data/esi.csv") %>%
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(week, .after = Date)
 
 esi_bridge <- esi %>%
@@ -82,8 +83,9 @@ cpi <- read.csv("/Users/lena/Documents/R/master_thesis/data/cpi.csv") %>%
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
-  relocate(week, .after = Date)
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
+  relocate(week, .after = Date) %>% 
+  select(-CPI)
 
 cpi_bridge <- cpi %>%
   mutate(across(all_of(c(
@@ -117,8 +119,9 @@ vacancies <- read.csv("/Users/lena/Documents/R/master_thesis/data/vacancies.csv"
       month(Date) == 11 ~ 9,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 13)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
-  relocate(week, .after = Date)
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
+  relocate(week, .after = Date) %>% 
+  select(-vacancies)
 
 vacancies_bridge <- vacancies %>%
   mutate(across(all_of(c(
@@ -151,7 +154,7 @@ term_spread <- read.csv("/Users/lena/Documents/R/master_thesis/data/term_spread.
       month(Date) == 11 ~ 11,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 0)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(spread, .after = last_col())
 
 term_spread_bridge <- term_spread %>%
@@ -185,7 +188,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
       month(Date) == 11 ~ 0,
     month(Date) == 3 |
       month(Date) == 6 | month(Date) == 9 | month(Date) == 12 ~ 0)) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
+  filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   relocate(IP, .after = last_col())
 
 
@@ -193,7 +196,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
 
 gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>% 
   rename(week = quarter_week) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01")
+  filter(Date >= "2002-01-01" & Date < "2024-04-01")
 
 # load weekly models
 
@@ -214,65 +217,81 @@ source("/Users/lena/Git/master-thesis/functions/elasticNet_models/elasticNet_w13
 
 #Period 1: Recession - training sample: 2001Q4-2007Q2 --------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2007-07-01"
 max_test <- "2009-07-01"
 
 # Model 1
 
 week1_p1 <- elasticNet_w1(gdp, attention_bridge, min_train, min_test, max_test)
+rmsfe_w1_p1 <- week1_p1[[1]]
+
 
 # Model 2
 
 week2_p1 <- elasticNet_w2(gdp, attention_bridge, min_train, min_test, max_test)
+rmsfe_w2_p1 <- week2_p1[[1]]
 
 # Model 3
 
 week3_p1 <- elasticNet_w3(gdp, attention_bridge, min_train, min_test, max_test)
+rmsfe_w3_p1 <- week3_p1[[1]]
 
 # Model 4
 
 week4_p1 <- elasticNet_w4(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+rmsfe_w4_p1 <- week4_p1[[1]]
 
 # Model 5
 
 week5_p1 <- elasticNet_w5(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+rmsfe_w5_p1 <- week5_p1[[1]]
 
 # Model 6
 
 week6_p1 <- elasticNet_w6(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, min_train, min_test, max_test)
+rmsfe_w6_p1 <- week6_p1[[1]]
 
 # Model 7
 
 week7_p1 <- elasticNet_w7(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+rmsfe_w7_p1 <- week7_p1[[1]]
 
 # Model 8
 
 week8_p1 <- elasticNet_w8(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+rmsfe_w8_p1 <- week8_p1[[1]]
 
 # Model 9
 
 week9_p1 <- elasticNet_w9(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+rmsfe_w9_p1 <- week9_p1[[1]]
 
 # Model 10
 
 week10_p1 <- elasticNet_w10(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, min_train, min_test, max_test)
+rmsfe_w10_p1 <- week10_p1[[1]]
 
 # Model 11
 
 week11_p1 <- elasticNet_w11(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+rmsfe_w11_p1 <- week11_p1[[1]]
 
 # Model 12
 
 week12_p1 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+rmsfe_w12_p1 <- week12_p1[[1]]
 
 # Model 13
 
 week13_p1 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge, cpi_bridge, term_spread_bridge, ip_index, min_train, min_test, max_test)
+rmsfe_w13_p1 <- week13_p1[[1]]
+
+results_p1 <- c(rmsfe_w1_p1, rmsfe_w2_p1, rmsfe_w3_p1, rmsfe_w4_p1, rmsfe_w5_p1, rmsfe_w6_p1, rmsfe_w7_p1, rmsfe_w8_p1, rmsfe_w9_p1, rmsfe_w10_p1, rmsfe_w11_p1, rmsfe_w12_p1, rmsfe_w13_p1)
 
 #Period 2: Cyclical Stability - training sample: 2001Q4-2014Q2 -----------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2014-07-01"
 max_test <- "2016-07-01"
 
@@ -330,7 +349,7 @@ week13_p2 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge,
 
 #Period 3: Covid - training sample: 2001Q4-2019Q2 ------------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2019-07-01"
 max_test <- "2021-07-01"
 
@@ -388,7 +407,7 @@ week13_p3 <- elasticNet_w12(gdp, attention_bridge, esi_bridge, vacancies_bridge,
 
 #Period 4: Now - training sample: 2001Q4-2014Q2 --------------------------------
 
-min_train <- "2001-10-01"
+min_train <- "2002-01-01"
 min_test <- "2022-07-01"
 max_test <- "2024-04-01"
 

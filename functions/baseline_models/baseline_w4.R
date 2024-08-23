@@ -35,8 +35,8 @@ baseline_w4 <- function(gdp, esi_bridge, vacancies_bridge, cpi_bridge, min_train
   
   # nowcasting
   
-  for (ii in 1:nrow(alpha_ini)) {
-    for (month in 1:(nrow(window)-1)) {
+for (ii in 1:nrow(alpha_ini)) {
+  for (month in 1:(nrow(window)-1)) {
       window_test <- window[month]
       window_test_max <- window[month+1]
       y_m1_train <- y_m1 %>%
@@ -56,7 +56,7 @@ baseline_w4 <- function(gdp, esi_bridge, vacancies_bridge, cpi_bridge, min_train
         cv.glmnet(
           X_m1_train_z,
           y_m1_train,
-          alpha = alpha_ini[ii],
+          alpha = 0.5,
           type.measure = "mse",
           nfolds = 10,
           family = "gaussian"

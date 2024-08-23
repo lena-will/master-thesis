@@ -6,16 +6,16 @@ elasticNet_w12 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_bri
     select(ESI_b)
   vacancies_prep <- vacancies_bridge %>% 
     filter(week == 9) %>% 
-    select(vacancies_b)
+    select(vacancies_mom_b)
   cpi_prep <- cpi_bridge %>% 
     filter(week == 9) %>% 
-    select(CPI_b)
+    select(cpi_mom_b)
   term_spread_prep <- term_spread_bridge %>% 
     filter(week == 11) %>% 
     select(spread_b)
   ip_index_prep <- ip_index%>% 
     filter(week == 11) %>% 
-    select(IP)
+    select(ip_mom)
   X_m1 <- attention_bridge %>%
     filter(week_avail == 12) %>% 
     cbind(esi_prep) %>% 

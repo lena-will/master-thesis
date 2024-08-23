@@ -3,6 +3,10 @@
 library(tidyverse)
 library(tseries)
 
+columns <- c("series", "p_value")
+z_scores <- function(x) {
+  (x - mean(x)) / sd(x)
+}
 # ------------------ Augmeted Dickey-Fuller Tests ------------------------------
 
 # macro data
@@ -37,7 +41,6 @@ time_series <- esi %>%
   cbind(term_spread) %>% 
   cbind(ip_index)
 
-columns <- c("series", "p_value")
 test_results <- data.frame(matrix(nrow = ncol(time_series), ncol = length(columns))) 
 colnames(test_results) <- columns
 
@@ -96,11 +99,13 @@ for (ii in 1:ncol(attention_mom)){
   attention_results_mom$p_value[ii] = adf_test$p.value
 }
 
-# weekly attention -------------------------------------------------------------
+# weekly attention qoq growth --------------------------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/final/attention_issue_final.Rda")
+#load("/Users/lena/Documents/R/master_thesis/final/attention_issue_final.Rda")
+attention_issue <- read.csv("/Users/lena/Documents/R/master_thesis/final/attention_issue_mapping_final_growth_calculate.csv")
 attention_weekly <- attention_issue %>% 
-  select(-Date)
+  select(c(ends_with("_growth"))) %>% 
+  slice(-c(1:14))
 
 attention_weekly <- as.matrix(attention_weekly)
 
@@ -112,8 +117,6 @@ for (ii in 1:ncol(attention_weekly)){
   attention_results_weekly$series[ii] = colnames(attention_weekly)[ii]
   attention_results_weekly$p_value[ii] = adf_test$p.value
 }
-
-# compute growth rates
 
 
 

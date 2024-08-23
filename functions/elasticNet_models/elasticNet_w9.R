@@ -6,10 +6,10 @@ elasticNet_w9 <- function(gdp, attention, esi_bridge, vacancies_bridge, cpi_brid
     select(ESI_b)
   vacancies_prep <- vacancies_bridge %>% 
     filter(week == 9) %>% 
-    select(vacancies_b)
+    select(vacancies_mom_b)
   cpi_prep <- cpi_bridge %>% 
     filter(week == 9) %>% 
-    select(CPI_b)
+    select(cpi_mom_b)
   term_spread_prep <- term_spread_bridge %>% 
     filter(week == 7) %>% 
     select(spread_b)
