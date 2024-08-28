@@ -12,6 +12,8 @@ library(topicmodels)
 load(file = "/Users/lena/Documents/R/master_thesis/LDA environments/beta_03.Rda")
 load(file = "/Users/lena/Documents/R/master_thesis/LDA environments/gamma_03.Rda")
 
+lda_terms <- lda_final@terms
+
 folder_list <- list.files("/Users/lena/Desktop/faz_data/utf_8")
 path <- "/Users/lena/Desktop/faz_data/utf_8"
 file_name <- "artikel_df.csv"
@@ -38,6 +40,8 @@ artikel_collapsed <- artikel_df %>%
 
 issue_corpus <- quanteda::corpus(artikel_collapsed$Issue)
 dtm_issue <- DocumentTermMatrix(issue_corpus)
+
+dtm_issue <- dtm_issue[,dtm_issue$dimnames$Terms %in% lda_terms]
 
 # compute topic distribution for collapsed articles (for an issue) -------------
 

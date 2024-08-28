@@ -101,11 +101,14 @@ for (ii in 1:ncol(attention_mom)){
 
 # weekly attention qoq growth --------------------------------------------------
 
-#load("/Users/lena/Documents/R/master_thesis/final/attention_issue_final.Rda")
-attention_issue <- read.csv("/Users/lena/Documents/R/master_thesis/final/attention_issue_mapping_final_growth_calculate.csv")
-attention_weekly <- attention_issue %>% 
-  select(c(ends_with("_growth"))) %>% 
-  slice(-c(1:14))
+attention_ini <- read.csv("/Users/lena/Documents/R/master_thesis/final/issue_collapsed.csv")
+#attention_issue <- read.csv("/Users/lena/Documents/R/master_thesis/final/attention_issue_mapping_final_growth_calculate.csv")
+# attention_weekly <- attention_issue %>% 
+#   select(c(ends_with("_growth"))) %>% 
+#   slice(-c(1:14))
+
+attention_weekly <- attention_ini %>% 
+  select(-c(document, Date, X, week_avail))
 
 attention_weekly <- as.matrix(attention_weekly)
 

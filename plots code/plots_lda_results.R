@@ -8,7 +8,7 @@ library(RColorBrewer)
 
 # exploring the most common words in the topics --------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/lda_60.Rda")
+load("/Users/lena/Documents/R/master_thesis/final/lda_60.Rda")
 beta <- tidy(lda_final, matrix = "beta")
 
 topics <- beta %>% 
@@ -55,6 +55,13 @@ wordcloud_negative_sentiment <- topics %>%
 # for coloured word clouds
 pal <- brewer.pal(9,"Set1")
 wordcloud(wordcloud_negative_sentiment$term, freq = wordcloud_negative_sentiment$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
+
+# Elections
+wordcloud_elections <- topics %>% 
+  filter(topic == 18)
+# for coloured word clouds
+pal <- brewer.pal(9,"Set1")
+wordcloud(wordcloud_elections$term, freq = wordcloud_elections$beta, random.order = TRUE, colors = pal, scale=c(1.5,.1))
 
 # network graphs:
 network_topics <- beta %>% 

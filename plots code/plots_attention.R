@@ -95,8 +95,8 @@ plot(attention_negative)
 # example topic plot
 
 health <- attention_month %>% 
-  select(c(Date, `2`)) %>% 
-  rename(attention = `2`)
+  select(c(Date, `18`)) %>% 
+  rename(attention = `18`)
 
 attention_health <- ggplot(health) +
   geom_line(aes(x = Date, y = attention, group = 1)) +
@@ -106,5 +106,20 @@ attention_health <- ggplot(health) +
   geom_rect(data=recessions, aes(xmin=Peak, xmax=Trough, ymin=-Inf, ymax=+Inf), fill='grey', alpha=0.3)
 
 plot(attention_health)
+
+# Elections
+
+elections <- attention_month %>% 
+  select(c(Date, `18`)) %>% 
+  rename(attention = `18`)
+
+attention_elections <- ggplot(elections) +
+  geom_line(aes(x = Date, y = attention, group = 1)) +
+  scale_x_date(name = "Date", date_breaks = "1 year", date_labels="%Y", expand = c(0, 0)) +
+  scale_y_continuous(name = "Elections", breaks = seq(0.01, 0.03, 0.005)) +
+  theme_classic() +
+  geom_rect(data=recessions, aes(xmin=Peak, xmax=Trough, ymin=-Inf, ymax=+Inf), fill='grey', alpha=0.3)
+
+plot(attention_elections)
 
 
