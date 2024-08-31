@@ -23,6 +23,9 @@ git clone https://github.com/lena-will/master-thesis.git
 ## Code Structure
 + Text pre-processing is done in python and can be found in ```preprocessing.py```.
 + For computational efficiency the LDA is run using the R package ```topicmodels``` which was built in C.
-+ However, ```gibbs_sampling_lda.R``` offers code to do the inference to Latent Dirichlet Allocation from scratch using the Gibbs sampling algorithm introduced by Griffiths and Steyvers (2004).
++ However, ```LDA_gibbs_sampling_algorithm.R``` offers code to do the inference to Latent Dirichlet Allocation from scratch using the Gibbs sampling algorithm introduced by Griffiths and Steyvers (2004).
 + Code for any plots can be found in the ```plots code``` folder.
-+ All functions to the weekly bridge models are in the ```functions``` folder. ```weekly_models_elastic_net.R``` runs the models for all periods of the business cycle.
++ All functions to the weekly bridge models are in the ```functions``` folder.
++ All main files to run the weekly models for the baseline models as well as with the text-based indicators are in the ```nowcasting``` folder.
++ Files starting with ```LDA_``` hold the code to different LDA specification and/or extensions.
++ ```date_week_mapping.py```takes publication dates as inputs and returns the week of the quarter of a given year.
