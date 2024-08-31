@@ -25,7 +25,6 @@ artikel_subset <- artikel_df %>%
   slice(1:10)
 artikel_holdout <- artikel_df %>% 
   slice(11:14)
-#artikel_subset <- artikel_df
 
 # create document term-matrix --------------------------------------------------
 artikel_id <- artikel_subset$artikel_id

@@ -3,16 +3,12 @@
 library(tidyverse)
 library(stringi)
 library(tidyr)
-library(quanteda)
-library(tm)
-library(topicmodels)
+library(tidytext)
 
 # Load data and LDA results ----------------------------------------------------
 
-load(file = "/Users/lena/Documents/R/master_thesis/LDA environments/beta_03.Rda")
-load(file = "/Users/lena/Documents/R/master_thesis/LDA environments/gamma_03.Rda")
-
-lda_terms <- lda_final@terms
+load(file = "/Users/lena/Documents/R/master_thesis/final/lda_60.Rda")
+gamma <- tidy(lda_final, matrix = "gamma")
 
 folder_list <- list.files("/Users/lena/Desktop/faz_data/utf_8")
 path <- "/Users/lena/Desktop/faz_data/utf_8"
@@ -29,40 +25,13 @@ for (f in 1:length(folder_list)) {
 
 rm(f, file_name, folder_name, data_tmp)
 
-# collapse articles from the same issue into one large document ----------------
+# load text-based indicators ---------------------------------------------------
 
-artikel_collapsed <- artikel_df %>% 
-  select(c(Datum, Stemming)) %>% 
-  group_by(Datum) %>% 
-  summarise(Issue = paste(Stemming, collapse = ""))
-
-# compute doc-term matrix for new corpus ---------------------------------------
-
-issue_corpus <- quanteda::corpus(artikel_collapsed$Issue)
-dtm_issue <- DocumentTermMatrix(issue_corpus)
-
-dtm_issue <- dtm_issue[,dtm_issue$dimnames$Terms %in% lda_terms]
-
-# compute topic distribution for collapsed articles (for an issue) -------------
-
-control_issue = list(
-  seed = 1234,
-  estimate.beta = FALSE,
-  alpha = 50/80,
-  iter = 2000,
-  burnin = 500,
-  thin = 10,
-  best = TRUE
-)
-
-#issue_lda <- LDA(dtm_issue, model = lda, control = control_issue)
-#save(issue_lda, file = "/Users/lena/Documents/R/master_thesis/issue_lda_03.Rda")
-load(file = "/Users/lena/Documents/R/master_thesis/issue_lda_03.Rda")
-
-gamma_issue <- as.data.frame(issue_lda@gamma) %>% 
-  cbind(artikel_collapsed$Datum) %>% 
-  rename(Datum = `artikel_collapsed$Datum`) %>% 
-  relocate(Datum, .before = 1)
+load(file = "/Users/lena/Documents/R/master_thesis/final/issue_collapsed.Rda")
+gamma_issue <- issue_gamma_wide %>% 
+  pivot_longer(cols = -c(document, Date)) %>% 
+  rename(topic = name) %>% 
+  rename(gamma = value)
 
 # get article-topic mapping ----------------------------------------------------
 
@@ -95,19 +64,33 @@ check <- article_topic_mapping %>%
   group_by(Datum) %>% 
   tally() %>% 
   ungroup() %>% 
-  filter(n != 80)
+  filter(n != 60)
 
-filter_date <- article_topic_mapping %>% 
-  filter(Datum == "2002-03-17")
+dates_check <- as.Date(check$Datum)
+
+revised_mapping <- NULL
+
+for (ii in 1:length(dates_check)){
+  article_topic_mapping_check <- article_topic_mapping %>%
+    filter(Datum == dates_check[ii]) %>%
+    group_by(topic) %>%
+    filter(length(topic) == 2) %>%
+    slice(-1)
+  revised_mapping <- revised_mapping %>%
+    rbind(article_topic_mapping_check)
+}
+
+article_topic_mapping_decrease <- article_topic_mapping %>% 
+  anti_join(revised_mapping)
 
 artikel_df_prep <- artikel_df %>% 
   select(c(artikel_id, Stemming))
-article_topic_mapping_text <- merge(article_topic_mapping, artikel_df_prep, by = "artikel_id")
+article_topic_mapping_text <- merge(article_topic_mapping_decrease, artikel_df_prep, by = "artikel_id")
 
 # get positive and negative German words -----------------------------------------
 
-positiv_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/GermanPolarityClues-Positive-Lemma-21042012.tsv", col_names = FALSE) 
-negativ_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/GermanPolarityClues-Negative-Lemma-21042012.tsv", col_names = FALSE) 
+positiv_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/tone/GermanPolarityClues-Positive-Lemma-21042012.tsv", col_names = FALSE) 
+negativ_de <- readr::read_delim("/Users/lena/Documents/R/master_thesis/tone/GermanPolarityClues-Negative-Lemma-21042012.tsv", col_names = FALSE) 
 colnames_tsv <- c("Term", "Lemma", "PoS", "Sentiment", "Score", "D")
 colnames(positiv_de) <- colnames_tsv
 colnames(negativ_de) <- colnames_tsv
@@ -165,6 +148,22 @@ tone_counts_normalised <- tone_counts %>%
 # tone adjustment of topic frequencies per issue -------------------------------
 
 tone_adjustment <- tone_counts_normalised %>% 
-  mutate(tone_adjustment = positiv_counts - negativ_counts)
+  mutate(tone_adjustment = positiv_counts - negativ_counts) %>% 
+  select(c(topic, Datum, tone_adjustment)) %>% 
+  mutate(Datum = as.Date(Datum, format = "%Y-%m-%d")) %>% 
+  mutate(topic = as.numeric(topic))
 
+gamma_issue <- gamma_issue %>% 
+  #rename(Datum = Date) %>% 
+  mutate(Datum = as.Date(Datum, format = "%Y-%m-%d")) %>% 
+  mutate(topic = as.numeric(topic))
 
+tone_adjusted_attention <- gamma_issue %>% 
+  left_join(tone_adjustment) %>% 
+  mutate(tone_adjusted_gamma = gamma*tone_adjustment)
+
+tone_adjusted_attention_wide <- tone_adjusted_attention %>% 
+  select(-c(document, gamma, tone_adjustment)) %>% 
+  pivot_wider(names_from = topic, values_from = tone_adjusted_gamma)
+
+save(tone_adjusted_attention_wide, file = "/Users/lena/Documents/R/master_thesis/tone_adjusted_attention.Rda")

@@ -26,8 +26,8 @@ for (f in 1:length(folder_list)) {
 lda_corpus <- quanteda::corpus(artikel_df$Stemming)
 dtm <- DocumentTermMatrix(lda_corpus)
 
-term_tfidf <- tapply(dtm$v/slam::row_sums(dtm)[dtm$i], dtm$j, mean) * log10(nDocs(dtm)/slam::col_sums(dtm > 0))
-dtm_weighting <- dtm[, term_tfidf >= 0.011] # adjust dtm for weighting
+term_tfidf <- tapply(dtm$v/slam::row_sums(dtm)[dtm$i], dtm$j, mean) * log2(nDocs(dtm)/slam::col_sums(dtm > 0))
+dtm_weighting <- dtm[, term_tfidf >= 0.035] # adjust dtm for weighting
 dtm_weighting <- dtm_weighting[slam::row_sums(dtm_weighting) > 0,] # remove those articles which don't have any relevant tokens after adjusting
 
 # define parameters ------------------------------------------------------------

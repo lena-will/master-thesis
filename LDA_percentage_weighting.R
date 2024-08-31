@@ -38,7 +38,7 @@ dtm_weighting <- dtm_weighting[slam::row_sums(dtm_weighting) > 0, ]
 
 # define parameters ------------------------------------------------------------
 
-k = 80
+k = 60
 
 control_lda <- list(
   alpha = 50 / k,
