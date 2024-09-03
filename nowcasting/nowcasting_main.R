@@ -14,7 +14,7 @@ attention <- attention_ini %>%
   filter(Date >= "2002-01-01" & Date < "2024-04-01") %>% 
   select(-X)
 
-source("/Users/lena/Git/master-thesis/functions/elasticNet_models/bridge_data_average.R")
+source("/Users/lena/Git/master-thesis/functions/bridge_data_average.R")
 
 start_col <- 5
 attention_bridge <- bridge_data_average(attention, start_col)
@@ -196,7 +196,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
     month(Date) == 1 |
       month(Date) == 4 |
       month(Date) == 7 |
-      month(Date) == 10 ~ 11,
+      month(Date) == 10 ~ 10,
     month(Date) == 2 |
       month(Date) == 5 |
       month(Date) == 8 |
@@ -215,7 +215,7 @@ gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>%
 
 # ------------------------------ Nowcasting ------------------------------------
 
-load("/Users/lena/Documents/R/master_thesis/preselection_results.Rda")
+load("/Users/lena/Documents/R/master_thesis/preselection_results005.Rda")
 source("/Users/lena/Git/master-thesis/functions/weekly_models/model_w1.R")
 source("/Users/lena/Git/master-thesis/functions/weekly_models/model_w2.R")
 source("/Users/lena/Git/master-thesis/functions/weekly_models/model_w3.R")
@@ -249,7 +249,7 @@ model_w6_p1 <- model_w6(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies
 model_w7_p1 <- model_w7(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
 model_w8_p1 <- model_w8(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
 model_w9_p1 <- model_w9(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
-model_w10_p1 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
+model_w10_p1 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
 model_w11_p1 <- model_w11(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
 model_w12_p1 <- model_w12(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
 model_w13_p1 <- model_w13(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p1_preselection, min_train_p1, max_train_p1, max_test_p1)
@@ -278,7 +278,7 @@ model_w6_p2 <- model_w6(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies
 model_w7_p2 <- model_w7(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
 model_w8_p2 <- model_w8(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
 model_w9_p2 <- model_w9(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
-model_w10_p2 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
+model_w10_p2 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
 model_w11_p2 <- model_w11(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
 model_w12_p2 <- model_w12(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
 model_w13_p2 <- model_w13(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p2_preselection, min_train_p2, max_train_p2, max_test_p2)
@@ -308,7 +308,7 @@ model_w6_p3 <- model_w6(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies
 model_w7_p3 <- model_w7(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
 model_w8_p3 <- model_w8(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
 model_w9_p3 <- model_w9(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
-model_w10_p3 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
+model_w10_p3 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
 model_w11_p3 <- model_w11(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
 model_w12_p3 <- model_w12(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
 model_w13_p3 <- model_w13(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p3_preselection, min_train_p3, max_train_p3, max_test_p3)
@@ -338,7 +338,7 @@ model_w6_p4 <- model_w6(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies
 model_w7_p4 <- model_w7(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
 model_w8_p4 <- model_w8(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
 model_w9_p4 <- model_w9(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
-model_w10_p4 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
+model_w10_p4 <- model_w10(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
 model_w11_p4 <- model_w11(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
 model_w12_p4 <- model_w12(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
 model_w13_p4 <- model_w13(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, p4_preselection, min_train_p4, max_train_p4, max_test_p4)
@@ -347,3 +347,10 @@ results_p4 = c(model_w1_p4, model_w2_p4, model_w3_p4, model_w4_p4, model_w5_p4, 
 results_p4 <- as.data.frame(results_p4)
 
 rm(model_w1_p4, model_w2_p4, model_w3_p4, model_w4_p4, model_w5_p4, model_w6_p4, model_w7_p4, model_w8_p4, model_w9_p4, model_w10_p4, model_w11_p4, model_w12_p4, model_w13_p4)
+
+# save results
+
+save(results_p1, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p1_text005.Rda")
+save(results_p2, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p2_text005.Rda")
+save(results_p3, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p3_text005.Rda")
+save(results_p4, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p4_text005.Rda")

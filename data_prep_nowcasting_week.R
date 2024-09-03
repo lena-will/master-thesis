@@ -96,7 +96,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
     month(Date) == 1 |
       month(Date) == 4 |
       month(Date) == 7 |
-      month(Date) == 10 ~ 11,
+      month(Date) == 10 ~ 10,
     month(Date) == 2 |
       month(Date) == 5 |
       month(Date) == 8 |

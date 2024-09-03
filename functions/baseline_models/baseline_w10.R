@@ -1,25 +1,27 @@
-model_w9 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_prep, period_preselection, min_train, max_train, max_test){
+baseline_w10 <- function(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train, max_train, max_test){
   
   y_m1 <- gdp %>%
-    filter(week == 9)
+    filter(week == 10)
   esi_prep <- esi_bridge %>% 
     filter(week == 9) %>% 
-    select(ESI_b)
-  vacancies_prep <- vacancies_bridge %>%
-    filter(week == 9) %>%
+    select(c(Date, ESI_b))
+  vacancies_prep <- vacancies_bridge %>% 
+    filter(week == 9) %>% 
     select(vacancies_mom_b)
-  cpi_prep <- cpi_bridge %>%
-    filter(week == 9) %>%
+  cpi_prep <- cpi_bridge %>% 
+    filter(week == 9) %>% 
     select(cpi_mom_b)
-  term_spread_prep <- term_spread_bridge %>%
-    filter(week == 7) %>%
+  term_spread_prep <- term_spread_bridge %>% 
+    filter(week == 7) %>% 
     select(spread_b)
-  X_m1 <- attention_bridge %>%
-    filter(week_avail == 9) %>% 
-    cbind(esi_prep) %>% 
-    cbind(vacancies_prep) %>%
-    cbind(cpi_prep) %>%
-    cbind(term_spread_prep)
+  ip_index_prep <- ip_index %>% 
+    filter(week == 10) %>% 
+    select(ip_mom)
+  X_m1 <- esi_prep %>% 
+    cbind(vacancies_prep) %>% 
+    cbind(cpi_prep) %>% 
+    cbind(term_spread_prep) %>% 
+    cbind(ip_index_prep)
   
   # define nowcasting window
   window <- y_m1 %>%
@@ -38,8 +40,8 @@ model_w9 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_br
       select(gdp_growth)
     y_m1_train <- as.matrix(y_m1_train)
     X_m1_train <- X_m1 %>%
-      filter(month >= min_train & month < window_test) %>%
-      select(-c(month, Date, week_avail))
+      filter(Date >= min_train & Date < window_test) %>%
+      select(-c(Date))
     
     mean_x <- apply(X_m1_train, 2, mean)
     sd_x <- apply(X_m1_train, 2, sd)
@@ -75,8 +77,8 @@ model_w9 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_br
       y_m1_train
     
     X_m1_test <- X_m1 %>%
-      filter(month >= window_test & month < window_test_max) %>%
-      select(-c(month, Date, week_avail))
+      filter(Date >= window_test & Date < window_test_max) %>%
+      select(-c(Date))
     X_m1_test_z <- scale(X_m1_test, center = mean_x, scale = sd_x)
     
     y_m1_test <- y_m1 %>%

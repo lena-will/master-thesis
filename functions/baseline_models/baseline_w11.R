@@ -15,7 +15,7 @@ baseline_w11 <- function(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spr
     filter(week == 11) %>% 
     select(spread_b)
   ip_index_prep <- ip_index %>% 
-    filter(week == 11) %>% 
+    filter(week == 10) %>% 
     select(ip_mom)
   X_m1 <- esi_prep %>% 
     cbind(vacancies_prep) %>% 

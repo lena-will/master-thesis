@@ -4,7 +4,7 @@ library(tidyverse)
 library(tidytext)
 library(kableExtra)
 
-install.packages("kableExtra")# Load LDA results for word distributions --------------------------------------
+# Load LDA results for word distributions --------------------------------------
 
 load("/Users/lena/Documents/R/master_thesis/final/lda_60.Rda")
 beta <- tidy(lda_final, matrix = "beta")

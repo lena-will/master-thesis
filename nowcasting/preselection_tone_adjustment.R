@@ -6,20 +6,20 @@ library(lubridate)
 
 # Load text data and aggregate to quarterly frequency for preselection ---------
 
-attention_ini <- read.csv("/Users/lena/Documents/R/master_thesis/final/issue_collapsed.csv") %>%
+attention_ini <- read.csv("/Users/lena/Documents/R/master_thesis/final/tone_adjusted_attention.csv") %>%
+  rename(Date = Datum) %>% 
   mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
 
 attention_ini$month <- as.Date(sub("\\d{2}$", "1", attention_ini$Date))
 
 attention <- attention_ini %>% 
   relocate(month, .after = Date) %>% 
-  filter(Date >= "2001-10-01" & Date < "2024-04-01") %>% 
-  select(-X)
+  filter(Date >= "2001-10-01" & Date < "2024-04-01")
 
 attention_preselection <- attention %>% 
   mutate(Quarter = format(as.yearqtr(Date, "%b-%Y"), "%YQ%q")) %>% 
   relocate(Quarter, .before = Date) %>% 
-  select(-c(document, Date, month, week_avail)) %>% 
+  select(-c(Date, month, week_avail, quarter_avail)) %>% 
   group_by(Quarter) %>% 
   summarise_all(mean)
 
@@ -149,4 +149,4 @@ rownames(p4_selected) = c(seq(1,nrow(p4_selected),1))
 # save preselected variables for nowcasting ------------------------------------
 
 preselection_results <- list(p1 = p1_selected, p2 = p2_selected, p3 = p3_selected, p4 = p4_selected)
-save(preselection_results, file = "/Users/lena/Documents/R/master_thesis/preselection_results02.Rda")
+save(preselection_results, file = "/Users/lena/Documents/R/master_thesis/preselection_results_tone02.Rda")

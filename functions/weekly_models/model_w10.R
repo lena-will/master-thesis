@@ -1,25 +1,29 @@
-model_w10 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_prep, period_preselection, min_train, max_train, max_test){
+model_w10 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_prep, ip_index, period_preselection, min_train, max_train, max_test){
   
   y_m1 <- gdp %>%
     filter(week == 10)
   esi_prep <- esi_bridge %>% 
     filter(week == 9) %>% 
     select(ESI_b)
-  vacancies_prep <- vacancies_bridge %>% 
-    filter(week == 9) %>% 
+  vacancies_prep <- vacancies_bridge %>%
+    filter(week == 9) %>%
     select(vacancies_mom_b)
-  cpi_prep <- cpi_bridge %>% 
-    filter(week == 9) %>% 
+  cpi_prep <- cpi_bridge %>%
+    filter(week == 9) %>%
     select(cpi_mom_b)
-  term_spread_prep <- term_spread_bridge %>% 
-    filter(week == 7) %>% 
+  term_spread_prep <- term_spread_bridge %>%
+    filter(week == 7) %>%
     select(spread_b)
+  ip_index_prep <- ip_index %>% 
+    filter(week == 10) %>% 
+    select(ip_mom)
   X_m1 <- attention_bridge %>%
     filter(week_avail == 10) %>% 
     cbind(esi_prep) %>% 
-    cbind(vacancies_prep) %>% 
-    cbind(cpi_prep) %>% 
-    cbind(term_spread_prep)
+    cbind(vacancies_prep) %>%
+    cbind(cpi_prep) %>%
+    cbind(term_spread_prep) %>%
+    cbind(ip_index_prep)
   
   # define nowcasting window
   window <- y_m1 %>%

@@ -167,3 +167,4 @@ tone_adjusted_attention_wide <- tone_adjusted_attention %>%
   pivot_wider(names_from = topic, values_from = tone_adjusted_gamma)
 
 save(tone_adjusted_attention_wide, file = "/Users/lena/Documents/R/master_thesis/tone_adjusted_attention.Rda")
+write.csv(tone_adjusted_attention_wide, file = "/Users/lena/Documents/R/master_thesis/tone_adjusted_attention.csv")

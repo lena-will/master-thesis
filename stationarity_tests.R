@@ -2,11 +2,15 @@
 
 library(tidyverse)
 library(tseries)
+library(kableExtra)
 
 columns <- c("series", "p_value")
 z_scores <- function(x) {
   (x - mean(x)) / sd(x)
 }
+
+topic_names <- read.csv("/Users/lena/Documents/R/master_thesis/topics/topic_name_mapping.csv") %>% 
+  mutate(topic = as.character(topic))
 # ------------------ Augmeted Dickey-Fuller Tests ------------------------------
 
 # macro data
@@ -51,6 +55,7 @@ for (ii in 1:ncol(time_series)){
   test_results$p_value[ii] = adf_test$p.value
 }
 
+kable(test_results, "latex")
 # monthly attention ------------------------------------------------------------
 
 load("/Users/lena/Documents/R/master_thesis/final/attention_month_final.Rda")
@@ -121,8 +126,16 @@ for (ii in 1:ncol(attention_weekly)){
   attention_results_weekly$p_value[ii] = adf_test$p.value
 }
 
+attention_results_weekly$series <- gsub("X", "", attention_results_weekly$series)
+  
+attention_results_weekly_name <- attention_results_weekly %>% 
+  rename(topic = series) %>% 
+  left_join(topic_names) %>% 
+  select(-topic) %>% 
+  relocate(name, .before = 1)
 
 
+kable(attention_results_weekly_name, "latex")
 
 
 

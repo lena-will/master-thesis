@@ -5,20 +5,20 @@ model_w7 <- function(gdp, attention_bridge, esi_bridge, cpi_bridge, vacancies_br
   esi_prep <- esi_bridge %>% 
     filter(week == 4) %>% 
     select(ESI_b)
-  vacancies_prep <- vacancies_bridge %>% 
-    filter(week == 4) %>% 
+  vacancies_prep <- vacancies_bridge %>%
+    filter(week == 4) %>%
     select(vacancies_mom_b)
-  cpi_prep <- cpi_bridge %>% 
-    filter(week == 4) %>% 
+  cpi_prep <- cpi_bridge %>%
+    filter(week == 4) %>%
     select(cpi_mom_b)
-  term_spread_prep <- term_spread_bridge %>% 
-    filter(week == 7) %>% 
+  term_spread_prep <- term_spread_bridge %>%
+    filter(week == 7) %>%
     select(spread_b)
   X_m1 <- attention_bridge %>%
     filter(week_avail == 7) %>% 
     cbind(esi_prep) %>% 
-    cbind(vacancies_prep) %>% 
-    cbind(cpi_prep) %>% 
+    cbind(vacancies_prep) %>%
+    cbind(cpi_prep) %>%
     cbind(term_spread_prep)
   
   # define nowcasting window

@@ -151,7 +151,7 @@ ip_index <- read.csv("/Users/lena/Documents/R/master_thesis/data/ip_index.csv") 
     month(Date) == 1 |
       month(Date) == 4 |
       month(Date) == 7 |
-      month(Date) == 10 ~ 11,
+      month(Date) == 10 ~ 10,
     month(Date) == 2 |
       month(Date) == 5 |
       month(Date) == 8 |
@@ -173,6 +173,7 @@ gdp <- read.csv("/Users/lena/Documents/R/master_thesis/data/gdp_weekly.csv") %>%
 source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w4.R")
 source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w7.R")
 source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w9.R")
+source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w10.R")
 source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w11.R")
 source("/Users/lena/Git/master-thesis/functions/baseline_models/baseline_w13.R")
 
@@ -185,13 +186,14 @@ max_test_p1 <- "2009-04-01"
 baseline_w4_p1 <- baseline_w4(gdp, esi_bridge, cpi_bridge, vacancies_bridge, min_train_p1, max_train_p1, max_test_p1)
 baseline_w7_p1 <- baseline_w7(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p1, max_train_p1, max_test_p1)
 baseline_w9_p1 <- baseline_w9(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p1, max_train_p1, max_test_p1)
+baseline_w10_p1 <- baseline_w10(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p1, max_train_p1, max_test_p1)
 baseline_w11_p1 <- baseline_w11(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p1, max_train_p1, max_test_p1)
 baseline_w13_p1 <- baseline_w13(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p1, max_train_p1, max_test_p1)
 
-results_baseline_p1 <- c(baseline_w4_p1, baseline_w7_p1, baseline_w9_p1, baseline_w11_p1, baseline_w13_p1)
+results_baseline_p1 <- c(baseline_w4_p1, baseline_w7_p1, baseline_w9_p1, baseline_w10_p1, baseline_w11_p1, baseline_w13_p1)
 results_baseline_p1 <- as.data.frame(results_baseline_p1)
 
-rm(baseline_w4_p1, baseline_w7_p1, baseline_w9_p1, baseline_w11_p1, baseline_w13_p1)
+rm(baseline_w4_p1, baseline_w7_p1, baseline_w9_p1, baseline_w10_p1, baseline_w11_p1, baseline_w13_p1)
 
 # Period 2: Cyclical Stability -------------------------------------------------
 
@@ -202,13 +204,14 @@ max_test_p2 <- "2016-04-01"
 baseline_w4_p2 <- baseline_w4(gdp, esi_bridge, cpi_bridge, vacancies_bridge, min_train_p2, max_train_p2, max_test_p2)
 baseline_w7_p2 <- baseline_w7(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p2, max_train_p2, max_test_p2)
 baseline_w9_p2 <- baseline_w9(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p2, max_train_p2, max_test_p2)
+baseline_w10_p2 <- baseline_w10(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p2, max_train_p2, max_test_p2)
 baseline_w11_p2 <- baseline_w11(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p2, max_train_p2, max_test_p2)
 baseline_w13_p2 <- baseline_w13(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p2, max_train_p2, max_test_p2)
 
-results_baseline_p2 <- c(baseline_w4_p2, baseline_w7_p2, baseline_w9_p2, baseline_w11_p2, baseline_w13_p2)
+results_baseline_p2 <- c(baseline_w4_p2, baseline_w7_p2, baseline_w9_p2, baseline_w10_p2, baseline_w11_p2, baseline_w13_p2)
 results_baseline_p2 <- as.data.frame(results_baseline_p2)
 
-rm(baseline_w4_p2, baseline_w7_p2, baseline_w9_p2, baseline_w11_p2, baseline_w13_p2)
+rm(baseline_w4_p2, baseline_w7_p2, baseline_w9_p2, baseline_w10_p2, baseline_w11_p2, baseline_w13_p2)
 
 # Period 3: COVID pandemic -----------------------------------------------------
 
@@ -219,13 +222,14 @@ max_test_p3 <- "2021-04-01"
 baseline_w4_p3 <- baseline_w4(gdp, esi_bridge, cpi_bridge, vacancies_bridge, min_train_p3, max_train_p3, max_test_p3)
 baseline_w7_p3 <- baseline_w7(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p3, max_train_p3, max_test_p3)
 baseline_w9_p3 <- baseline_w9(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p3, max_train_p3, max_test_p3)
+baseline_w10_p3 <- baseline_w10(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p3, max_train_p3, max_test_p3)
 baseline_w11_p3 <- baseline_w11(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p3, max_train_p3, max_test_p3)
 baseline_w13_p3 <- baseline_w13(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p3, max_train_p3, max_test_p3)
 
-results_baseline_p3 <- c(baseline_w4_p3, baseline_w7_p3, baseline_w9_p3, baseline_w11_p3, baseline_w13_p3)
+results_baseline_p3 <- c(baseline_w4_p3, baseline_w7_p3, baseline_w9_p3, baseline_w10_p3, baseline_w11_p3, baseline_w13_p3)
 results_baseline_p3 <- as.data.frame(results_baseline_p3)
 
-rm(baseline_w4_p3, baseline_w7_p3, baseline_w9_p3, baseline_w11_p3, baseline_w13_p3)
+rm(baseline_w4_p3, baseline_w7_p3, baseline_w9_p3, baseline_w10_p3, baseline_w11_p3, baseline_w13_p3)
 
 
 # Period 4: Now ----------------------------------------------------------------
@@ -237,10 +241,18 @@ max_test_p4 <- "2024-04-01"
 baseline_w4_p4 <- baseline_w4(gdp, esi_bridge, cpi_bridge, vacancies_bridge, min_train_p4, max_train_p4, max_test_p4)
 baseline_w7_p4 <- baseline_w7(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p4, max_train_p4, max_test_p4)
 baseline_w9_p4 <- baseline_w9(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, min_train_p4, max_train_p4, max_test_p4)
+baseline_w10_p4 <- baseline_w10(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p4, max_train_p4, max_test_p4)
 baseline_w11_p4 <- baseline_w11(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p4, max_train_p4, max_test_p4)
 baseline_w13_p4 <- baseline_w13(gdp, esi_bridge, cpi_bridge, vacancies_bridge, term_spread_bridge, ip_index, min_train_p4, max_train_p4, max_test_p4)
 
-results_baseline_p4 <- c(baseline_w4_p4, baseline_w7_p4, baseline_w9_p4, baseline_w11_p4, baseline_w13_p4)
+results_baseline_p4 <- c(baseline_w4_p4, baseline_w7_p4, baseline_w9_p4, baseline_w10_p4, baseline_w11_p4, baseline_w13_p4)
 results_baseline_p4 <- as.data.frame(results_baseline_p4)
 
-rm(baseline_w4_p4, baseline_w7_p4, baseline_w9_p4, baseline_w11_p4, baseline_w13_p4)
+rm(baseline_w4_p4, baseline_w7_p4, baseline_w9_p4, baseline_w10_p4, baseline_w11_p4, baseline_w13_p4)
+
+# save results -----------------------------------------------------------------
+
+save(results_baseline_p1, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p1_baseline.Rda")
+save(results_baseline_p2, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p2_baseline.Rda")
+save(results_baseline_p3, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p3_baseline.Rda")
+save(results_baseline_p4, file = "/Users/lena/Documents/R/master_thesis/nowcasting results/results_p4_baseline.Rda")

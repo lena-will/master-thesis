@@ -19,10 +19,10 @@ preselection <- function(gdp,
   
   cpi_preselection <- cpi_preselection %>%
     filter(Quarter >= min_train & Quarter <= max_train)
-  
+
   vacancies_preselection <- vacancies_preselection %>%
     filter(Quarter >= min_train & Quarter <= max_train)
-  
+
   term_spread_preselection <- term_spread_preselection %>%
     filter(Quarter >= min_train & Quarter <= max_train)
   
